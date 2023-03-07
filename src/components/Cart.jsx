@@ -1,37 +1,62 @@
 import {
-    FormControl,
-    FormLabel,
-    Input,
-    FormHelperText,
-    Button,
-    Container,
-    Box,
-    Flex,
-    Textarea,
-  } from "@chakra-ui/react";
-  import React from "react";
-  
-  const Cart = () => {
-    return (
-      <Container className="cart-container">
-        <FormControl>
-          <Box>
-            <FormLabel>Your name</FormLabel>
-            <Input type="text" />
-            <FormLabel>Email address</FormLabel>
-            <Input type="email" />
-            <FormHelperText>We'll never share your email.</FormHelperText>
-          </Box>
-          <FormLabel>What do you want to tell us?</FormLabel>
-          <Textarea></Textarea>
-          <Box className="btn-send">
-            <Button colorScheme="teal" variant="outline">
-              Send information
-            </Button>
-          </Box>
-        </FormControl>
-      </Container>
-    );
-  };
-  
-  export default Cart;
+  FormControl,
+  FormLabel,
+  Input,
+  FormHelperText,
+  Button,
+  Container,
+  Box,
+  Textarea,
+  Center,
+  Heading,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Text,
+} from "@chakra-ui/react";
+import React, { useContext, useState } from "react";
+import { CartContext } from "./context/ShoppingCartContext";
+import SendOrder from "./SendOrder";
+
+const Cart = () => {
+  const [cart, setCart] = useContext(CartContext);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUSerEmail] = useState("");
+
+  return (
+    <>
+      <Center bg="#D6EAF8" h="100px" color="black">
+        <Heading as="h2" size="2xl">
+          Cart
+        </Heading>
+      </Center>
+      {cart.map((item) => {
+        return (
+          <Container key={item.id} className="main-catalogue">
+            <Card maxW="sm">
+              <CardHeader>
+                <Heading size="md">{item.name}</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text as="b">Quantity: {item.quantity}</Text>
+                <Text>Price: U$D {item.price}</Text>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  colorScheme="red"
+                  onClick={() => console.log("Eliminando")}
+                >
+                  Delete from cart
+                </Button>
+              </CardFooter>
+            </Card>
+          </Container>
+        );
+      })}
+      <SendOrder />
+    </>
+  );
+};
+
+export default Cart;

@@ -1,6 +1,6 @@
 import React from "react";
-import hp from "../assets/hp.jpg";
-import { Center,
+import {
+  Center,
   Card,
   CardBody,
   Image,
@@ -9,24 +9,25 @@ import { Center,
   Divider,
   Stack,
   CardFooter,
-  Button, } from "@chakra-ui/react";
+  Button,
+} from "@chakra-ui/react";
   import { Link } from "react-router-dom";
 
-const Item = ({ id, name, stock, category }) => {
-  
-
+const Item = ({ id, name, stock, category, image }) => {
   return (
     <div>
       <div key={id}>
+      {console.log(id)}
         <Center p="1rem">
           <Card className="card-main">
             <CardBody>
-              <Image borderRadius="lg" src={hp} />
+              <Image borderRadius="lg" src={image} alt="Foto del personaje" />
+              {console.log(image)}
+              {console.log(name)}
               <Stack mt="6" spacing="3">
                 <Heading size="md">{name}</Heading>
-
                 <Text color="blue.800" fontSize="l">
-                  Category: {category}
+                  Categoría: {category}
                 </Text>
                 <Text color="red.600" fontSize="xl">
                   Stock: {stock}

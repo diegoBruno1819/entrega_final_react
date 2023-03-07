@@ -1,61 +1,34 @@
 import ItemList from "./ItemList";
-import Data from "../data.json";
 import { useParams } from "react-router-dom";
-import { Heading, Center } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 
 const ItemListContainer = () => {
+  const [magx, setMagx] = useState([]);
   const { category } = useParams();
-  console.log(category)
 
-  const getDatos = () => {
-    return new Promise((resolve, reject) => {
-      if(Data.length === 0) {
-        reject(new Error("No hay datos"));
-      }
-      setTimeout(() => {
-        resolve(Data);
-      }, 2000);
-    });
-  };
+  useEffect(() => {
+    const db = getFirestore();
+    const magxsCollection = collection(db, "magxs");
+    getDocs(magxsCollection).then((querySnapshot) => {
+      {console.log(querySnapshot)}
+      const magxs = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+      setMagx(magxs)
+    })
+  }, [])
 
-  async function fetchingData() {
-    try {
-      const datosFetched = await genDatos();
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  const miFilter = magx.filter((magx) => magx.category === category)
 
-  fetchingData();
-
-  if (category === undefined) {
     return (
       <div>
-        <Center bg="#D6EAF8" h="100px" color="black">
-          <Heading as="h2" size="2xl">
-            Magxs Catalogue
-          </Heading>
-        </Center>
-        <ItemList magxs={Data} />
-      </div>
-    );
-  } else {
-    const catFilter = Data.filter((magx) => magx.category === category);
-    return (
-      <div>
-        <Center bg="#D6EAF8" h="100px" color="black">
-          <Heading as="h2" size="2xl">
-            Magxs de Hogwartz
-          </Heading>
-        </Center>
-        {catFilter ? <ItemList magxs={catFilter} /> : <ItemList magxs={Data} />}
+            {category ? <ItemList magx={miFilter} /> : <ItemList magxs={magx}/>}
       </div>
     );
   }
 
-
-  
-};
 
 export default ItemListContainer;

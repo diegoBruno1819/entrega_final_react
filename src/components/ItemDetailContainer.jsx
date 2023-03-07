@@ -1,31 +1,23 @@
 import ItemDetail from "./ItemDetail";
-import Data from "../data.json";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
+
 const ItemDetailContainer = () => {
-  const getDatos = () => {
-    return new Promise((resolve, reject) => {
-      if (Data.length === 0) {
-        reject(new Error("No hay datos"));
-      }
-      setTimeout(() => {
-        resolve(Data);
-      }, 2000);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const db = getFirestore();
+    const magxsCollection = collection(db, "magxs");
+    getDocs(magxsCollection).then((querySnapshot) => {
+      const magxs = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+      setData(magxs);
     });
-  };
+  }, []);
 
-  async function fetchingData() {
-    try {
-      const datosFetched = await getDatos();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  fetchingData();
-  return (
-    <>
-      <ItemDetail magxs={Data} />
-    </>
-  );
+  return <ItemDetail magxs={data} />
+  
 };
 
 export default ItemDetailContainer;

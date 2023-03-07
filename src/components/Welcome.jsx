@@ -1,4 +1,4 @@
-import { Heading, Center, Box, Image } from "@chakra-ui/react";
+import { Center, Box, Image } from "@chakra-ui/react";
 
 const Welcome = () => {
   return (
@@ -7,7 +7,7 @@ const Welcome = () => {
         <Box boxSize="xxl">
           <Image
             src="https://play-lh.googleusercontent.com/WAaIa9mMfZOl1Bi2piXFzXX7RJ8MWc_P1lXRuWh75Thr1P6NwKXSs-5lZzGKmK82XmY"
-            alt="bike"
+            alt="Casa de Hogwartz"
           />
         </Box>
       </Center>

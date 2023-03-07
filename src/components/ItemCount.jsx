@@ -1,39 +1,65 @@
-import { useContext, useState } from 'react';
-import { 
-    Text,
-    ButtonGroup,
-    IconButton,
-    Tooltip,
-    Center,
-} from '@chakra-ui/react';
-import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { CartContext } from './context/CartContext';
+import { useContext, useState } from "react";
+import {
+  Text,
+  ButtonGroup,
+  IconButton,
+  Tooltip,
+  Center,
+  Button,
+} from "@chakra-ui/react";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { CartContext } from "./context/ShoppingCartContext";
 
-const ItemCount = ({ stock }) => {
+const ItemCount = ({ stock, id, precio, nombre }) => {
+  const [cart, setCart] = useContext(CartContext);
+  const [count, setCount] = useState(1);
 
-  const { cart, increment, decrement, reset } = useContext(CartContext)
+  const addQty = () => {
+    setCount(count + 1);
+  };
 
-    /* const [count, setCount] = useState(1); */
+  const substractQty = () => {
+    setCount(count - 1);
+  };
 
-    /* const onAdd = () => {
-        setCount(count -1);
-    } */
+  const addToCart = () => {
+    setCart((currItems) => {
+      const isItemFound = currItems.find((item) => item.id === id);
+      if (isItemFound) {
+        return currItems.map((item) => {
+          if (item.id === id) {
+            return { ...item, quantity: item.quantity + count };
+          } else {
+            return item;
+          }
+        });
+      } else {
+        return [...currItems, { id, quantity: count, precio, nombre }];
+      }
+    });
+  };
 
   return (
     <>
-        <ButtonGroup size="sm" isAttached variant="outline">
+      <ButtonGroup size="sm" isAttached variant="outline">
         {cart < 1 ? (
           <Tooltip label="minimum stock reached" placement="bottom">
             <IconButton icon={<MinusIcon />} isDisabled />
           </Tooltip>
         ) : (
-          <IconButton icon={<MinusIcon />} onClick={decrement} />
+          <IconButton icon={<MinusIcon />} onClick={substractQty} />
         )}
-        <Center w="50px" h="30px">
-          <Text as="b">{cart}</Text>
+        <Center>
+          <Button
+            onClick={() => addToCart()}
+            variant="solid"
+            colorScheme="blue"
+          >
+            Add to cart:
+          </Button>
         </Center>
-        {cart < stock ? (
-          <IconButton icon={<AddIcon />} onClick={increment} />
+        {count < stock ? (
+          <IconButton icon={<AddIcon />} onClick={addQty} />
         ) : (
           <Tooltip label="stock limit reached" placement="bottom">
             <IconButton icon={<AddIcon />} isDisabled />
@@ -41,7 +67,7 @@ const ItemCount = ({ stock }) => {
         )}
       </ButtonGroup>
     </>
-  )
-}
+  );
+};
 
-export default ItemCount
+export default ItemCount;
